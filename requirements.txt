@@ -1,0 +1,9 @@
+﻿fastapi
+uvicorn
+pydantic
+python-multipart
+pillow
+pytesseract
+SpeechRecognition
+pydub
+aiofiles

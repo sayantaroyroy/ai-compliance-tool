@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free AI Compliance Tool. Scan text, images, and audio for GDPR, Copyright, and Social Media risks instantly.">
+    <meta name="keywords" content="AI compliance, GDPR scanner, copyright checker, content moderation, AI tools">
+    <meta name="author" content="TeamJ AI Solutions">
+    
+    <title>AI Compliance Officer | Free Risk Scanner</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); }
+        /* Animation for file drop success */
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+        .file-selected {
+            border-color: #4ade80 !important; /* Green border */
+            animation: pulse-green 2s infinite;
+        }
+        /* Hide scrollbar for clean modal */
+        .no-scroll { overflow: hidden; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen font-sans flex flex-col">
+
+    <nav class="border-b border-slate-700 bg-slate-800 p-4 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400 cursor-pointer" onclick="location.reload()">
+                <i class="fa-solid fa-shield-halved mr-2 text-blue-400"></i>AI Compliance Officer
+            </h1>
+            <span class="text-xs font-mono text-slate-400 bg-slate-900 px-2 py-1 rounded border border-slate-700">
+                <span class="w-2 h-2 inline-block rounded-full bg-green-500 mr-1 animate-pulse"></span>System Online
+            </span>
+        </div>
+    </nav>
+
+    <div class="flex-grow flex justify-center mt-6 px-2 gap-4 items-stretch">
+        
+        <aside class="hidden xl:flex w-40 bg-slate-800/50 border border-slate-700 rounded-lg p-2 text-center flex-col justify-center items-center text-slate-500 text-xs sticky top-24">
+            <i class="fa-solid fa-rectangle-ad text-4xl mb-2 opacity-50"></i>
+            <p>Ad Space (Skyscraper)</p>
+            <p class="mt-2 text-[10px] text-slate-600">Place Google AdSense Here</p>
+        </aside>
+
+        <main class="max-w-5xl w-full flex flex-col gap-6 mb-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-xl hover:border-blue-500 transition-colors flex flex-col">
+                    <h2 class="text-xl font-semibold mb-4 text-blue-300"><i class="fa-solid fa-align-left mr-2"></i>Text Scan</h2>
+                    <textarea id="textContent" rows="5" class="w-full bg-slate-900 border border-slate-600 rounded p-3 text-sm focus:outline-none focus:border-blue-500 mb-4 flex-grow transition-all" placeholder="Paste email, post, or document text here..."></textarea>
+                    <button onclick="analyzeText()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-blue-900/50">
+                        Scan Text
+                    </button>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-xl hover:border-purple-500 transition-colors flex flex-col">
+                    <h2 class="text-xl font-semibold mb-4 text-purple-300"><i class="fa-solid fa-eye mr-2"></i>Vision Scan</h2>
+                    <div id="imageDropZone" class="border-2 border-dashed border-slate-600 rounded-lg p-8 text-center mb-4 hover:bg-slate-700 transition cursor-pointer relative flex-grow flex flex-col justify-center items-center group">
+                        <input type="file" id="imageInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="image/*">
+                        <i id="imageIcon" class="fa-solid fa-image text-4xl text-slate-500 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <p id="imageText" class="text-xs text-slate-400 font-mono">Drop Image or Click</p>
+                    </div>
+                    <button onclick="analyzeImage()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-purple-900/50">
+                        Scan Image
+                    </button>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow-xl hover:border-emerald-500 transition-colors flex flex-col">
+                    <h2 class="text-xl font-semibold mb-4 text-emerald-300"><i class="fa-solid fa-microphone mr-2"></i>Audio Scan</h2>
+                    <div id="audioDropZone" class="border-2 border-dashed border-slate-600 rounded-lg p-8 text-center mb-4 hover:bg-slate-700 transition cursor-pointer relative flex-grow flex flex-col justify-center items-center group">
+                        <input type="file" id="audioInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" accept="audio/*">
+                        <i id="audioIcon" class="fa-solid fa-wave-square text-4xl text-slate-500 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <p id="audioText" class="text-xs text-slate-400 font-mono">Drop Audio or Click</p>
+                    </div>
+                    <button onclick="analyzeAudio()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded transition shadow-lg shadow-emerald-900/50">
+                        Scan Audio
+                    </button>
+                </div>
+            </div>
+
+            <div id="resultArea" class="hidden">
+                <div class="bg-slate-800 rounded-xl p-8 border border-slate-600 shadow-2xl relative overflow-hidden">
+                    <div id="loadingBar" class="hidden absolute top-0 left-0 h-1 bg-blue-500 w-full animate-pulse"></div>
+                    
+                    <h3 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fa-solid fa-clipboard-check mr-3 text-blue-500"></i>Risk Analysis Report
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-slate-400 uppercase text-xs tracking-wider font-bold">GDPR & PII</span>
+                                <span id="gdprBadge" class="px-3 py-1 rounded text-xs font-bold bg-slate-800 text-slate-500 border border-slate-700">WAITING</span>
+                            </div>
+                            <div class="text-4xl font-bold mb-2" id="gdprScore">--</div>
+                            <p class="text-xs text-slate-400 leading-relaxed" id="gdprReason">...</p>
+                        </div>
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-slate-400 uppercase text-xs tracking-wider font-bold">Copyright</span>
+                                <span id="copyrightBadge" class="px-3 py-1 rounded text-xs font-bold bg-slate-800 text-slate-500 border border-slate-700">WAITING</span>
+                            </div>
+                            <div class="text-4xl font-bold mb-2" id="copyrightScore">--</div>
+                            <p class="text-xs text-slate-400 leading-relaxed" id="copyrightReason">...</p>
+                        </div>
+                        <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 hover:border-slate-500 transition-colors">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-slate-400 uppercase text-xs tracking-wider font-bold">Social Safety</span>
+                                <span id="socialBadge" class="px-3 py-1 rounded text-xs font-bold bg-slate-800 text-slate-500 border border-slate-700">WAITING</span>
+                            </div>
+                            <div class="text-4xl font-bold mb-2" id="socialScore">--</div>
+                            <p class="text-xs text-slate-400 leading-relaxed" id="socialReason">...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/50 rounded-xl p-8 border border-slate-700">
+                <h3 class="text-center text-xl font-bold text-slate-300 mb-8 uppercase tracking-widest">How It Works</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="p-4">
+                        <div class="w-16 h-16 bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-blue-400"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">1. Upload Content</h4>
+                        <p class="text-sm text-slate-400">Paste text or drag & drop images and audio files directly into the dashboard.</p>
+                    </div>
+                    <div class="p-4">
+                        <div class="w-16 h-16 bg-purple-900/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-purple-500/30">
+                            <i class="fa-solid fa-microchip text-2xl text-purple-400"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">2. AI Analysis</h4>
+                        <p class="text-sm text-slate-400">Our multi-modal engine (OCR & NLP) scans for GDPR leaks, copyright, and toxicity.</p>
+                    </div>
+                    <div class="p-4">
+                        <div class="w-16 h-16 bg-emerald-900/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                            <i class="fa-solid fa-list-check text-2xl text-emerald-400"></i>
+                        </div>
+                        <h4 class="font-bold text-white mb-2">3. Instant Results</h4>
+                        <p class="text-sm text-slate-400">Get a clear risk score and actionable feedback in seconds.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <aside class="hidden xl:flex w-40 bg-slate-800/50 border border-slate-700 rounded-lg p-2 text-center flex-col justify-center items-center text-slate-500 text-xs sticky top-24">
+            <i class="fa-solid fa-rectangle-ad text-4xl mb-2 opacity-50"></i>
+            <p>Ad Space (Skyscraper)</p>
+            <p class="mt-2 text-[10px] text-slate-600">Place Google AdSense Here</p>
+        </aside>
+
+    </div>
+
+    <footer class="bg-slate-800 border-t border-slate-700 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm text-slate-400">
+            <div class="mb-4 md:mb-0">
+                &copy; 2026 AI Compliance Officer. All rights reserved.
+            </div>
+            <div class="flex gap-6">
+                <button onclick="openModal('privacyModal')" class="hover:text-blue-400 transition">Privacy Policy</button>
+                <button onclick="openModal('termsModal')" class="hover:text-blue-400 transition">Terms of Service</button>
+                <a href="mailto:sayantaroy73@gmail.com" class="hover:text-blue-400 transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="privacyModal" class="hidden fixed inset-0 bg-black/80 z-[100] flex justify-center items-center p-4 backdrop-blur-sm" onclick="closeModal(this.id, event)">
+        <div class="bg-slate-800 border border-slate-600 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 shadow-2xl relative">
+            <button onclick="closeModal('privacyModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-4 text-blue-400">Privacy Policy</h2>
+            <div class="space-y-4 text-slate-300 text-sm">
+                <p><strong>Last Updated:</strong> 2026</p>
+                <p>Your privacy is important to us. This Privacy Policy explains how "AI Compliance Officer" handles your data.</p>
+                <h3 class="text-lg font-semibold text-white mt-4">1. Data Processing</h3>
+                <p>We process text, images, and audio files solely for the purpose of compliance analysis. All processing happens on secure servers.</p>
+                <h3 class="text-lg font-semibold text-white mt-4">2. Data Retention</h3>
+                <p>We do not store your uploaded files. Images and Audio are processed in memory and discarded immediately.</p>
+                <button onclick="closeModal('privacyModal')" class="mt-8 w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-white font-bold transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="termsModal" class="hidden fixed inset-0 bg-black/80 z-[100] flex justify-center items-center p-4 backdrop-blur-sm" onclick="closeModal(this.id, event)">
+        <div class="bg-slate-800 border border-slate-600 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8 shadow-2xl relative">
+            <button onclick="closeModal('termsModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+            <h2 class="text-2xl font-bold mb-4 text-emerald-400">Terms of Service</h2>
+            <div class="space-y-4 text-slate-300 text-sm">
+                <p><strong>Usage Agreement:</strong> By using this tool, you agree to the following terms.</p>
+                <h3 class="text-lg font-semibold text-white mt-4">1. No Legal Advice</h3>
+                <p>This tool provides automated risk estimation. It does NOT constitute legal advice. Always consult a qualified attorney for compliance matters.</p>
+                <h3 class="text-lg font-semibold text-white mt-4">2. Limitation of Liability</h3>
+                <p>We are not responsible for any damages resulting from the use or misuse of this software.</p>
+                <button onclick="closeModal('termsModal')" class="mt-8 w-full bg-slate-700 hover:bg-slate-600 py-2 rounded text-white font-bold transition">I Agree</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- MODAL LOGIC (Universal) ---
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            document.body.classList.add('no-scroll');
+        }
+
+        function closeModal(modalId, event) {
+            // Close if clicking the background OR the close button
+            if (!event || event.target.id === modalId || !event.target.id) {
+                document.getElementById(modalId).classList.add('hidden');
+                document.body.classList.remove('no-scroll');
+            }
+        }
+
+        // --- UI FEEDBACK LOGIC ---
+        
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                document.getElementById('imageText').innerText = fileName;
+                document.getElementById('imageText').classList.add('text-green-400', 'font-bold');
+                const icon = document.getElementById('imageIcon');
+                icon.className = "fa-solid fa-circle-check text-4xl text-green-500 mb-3";
+                document.getElementById('imageDropZone').classList.add('file-selected');
+            }
+        });
+
+        document.getElementById('audioInput').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                document.getElementById('audioText').innerText = fileName;
+                document.getElementById('audioText').classList.add('text-green-400', 'font-bold');
+                const icon = document.getElementById('audioIcon');
+                icon.className = "fa-solid fa-circle-check text-4xl text-green-500 mb-3";
+                document.getElementById('audioDropZone').classList.add('file-selected');
+            }
+        });
+
+        // --- API LOGIC ---
+
+        async function sendRequest(url, body, isFile = false) {
+            document.getElementById('resultArea').classList.remove('hidden');
+            document.getElementById('loadingBar').classList.remove('hidden');
+            
+            // Scroll logic
+            if(window.innerWidth < 768) {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
+            
+            let options = { method: 'POST' };
+            if (isFile) {
+                options.body = body; 
+            } else {
+                options.headers = { 'Content-Type': 'application/json' };
+                options.body = JSON.stringify(body);
+            }
+
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                updateUI(data);
+            } catch (error) {
+                alert("Error connecting to API: " + error);
+            } finally {
+                document.getElementById('loadingBar').classList.add('hidden');
+            }
+        }
+
+        function updateUI(data) {
+            updateCard('gdpr', data.gdpr_risk);
+            updateCard('copyright', data.copyright_risk);
+            updateCard('social', data.social_platform_risk);
+        }
+
+        function updateCard(type, risk) {
+            const scoreEl = document.getElementById(type + 'Score');
+            const reasonEl = document.getElementById(type + 'Reason');
+            const badgeEl = document.getElementById(type + 'Badge');
+            
+            scoreEl.innerText = risk.score + "%";
+            reasonEl.innerText = risk.reason;
+
+            if (risk.level === 'HIGH') {
+                badgeEl.className = "px-3 py-1 rounded text-xs font-bold bg-red-500/20 text-red-300 border border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]";
+                badgeEl.innerHTML = "<i class='fa-solid fa-triangle-exclamation mr-1'></i>HIGH RISK";
+                scoreEl.className = "text-4xl font-bold mb-2 text-red-500";
+            } else if (risk.level === 'MEDIUM') {
+                badgeEl.className = "px-3 py-1 rounded text-xs font-bold bg-yellow-500/20 text-yellow-300 border border-yellow-500";
+                badgeEl.innerHTML = "<i class='fa-solid fa-circle-exclamation mr-1'></i>MEDIUM";
+                scoreEl.className = "text-4xl font-bold mb-2 text-yellow-500";
+            } else {
+                badgeEl.className = "px-3 py-1 rounded text-xs font-bold bg-green-500/20 text-green-300 border border-green-500";
+                badgeEl.innerHTML = "<i class='fa-solid fa-check mr-1'></i>SAFE";
+                scoreEl.className = "text-4xl font-bold mb-2 text-green-500";
+            }
+        }
+
+        function analyzeText() {
+            const text = document.getElementById('textContent').value;
+            if(!text) return alert("Please enter text");
+            sendRequest('http://localhost:8000/analyze', { text_content: text });
+        }
+
+        function analyzeImage() {
+            const fileInput = document.getElementById('imageInput');
+            if(fileInput.files.length === 0) return alert("Select an image first!");
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            sendRequest('http://localhost:8000/analyze/image', formData, true);
+        }
+
+        function analyzeAudio() {
+            const fileInput = document.getElementById('audioInput');
+            if(fileInput.files.length === 0) return alert("Select audio first!");
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            sendRequest('http://localhost:8000/analyze/audio', formData, true);
+        }
+    </script>
+</body>
+</html>
