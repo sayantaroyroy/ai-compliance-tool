@@ -308,7 +308,7 @@
         function analyzeText() {
             const text = document.getElementById('textContent').value;
             if(!text) return alert("Please enter text");
-            sendRequest('http://localhost:8000/analyze', { text_content: text });
+            sendRequest('/analyze', { text_content: text });
         }
 
         function analyzeImage() {
@@ -316,7 +316,7 @@
             if(fileInput.files.length === 0) return alert("Select an image first!");
             const formData = new FormData();
             formData.append("file", fileInput.files[0]);
-            sendRequest('http://localhost:8000/analyze/image', formData, true);
+            sendRequest('/analyze/image', formData, true);
         }
 
         function analyzeAudio() {
@@ -324,7 +324,7 @@
             if(fileInput.files.length === 0) return alert("Select audio first!");
             const formData = new FormData();
             formData.append("file", fileInput.files[0]);
-            sendRequest('http://localhost:8000/analyze/audio', formData, true);
+            sendRequest('/analyze/audio', formData, true);
         }
     </script>
 </body>
